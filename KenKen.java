@@ -4,6 +4,9 @@ public class KenKen {
 	private KKSquare[][] puzzle;
 	private KKSquare[][] groups;
 
+	private int dim;
+	private final int pixelSize = 6;
+
 	public KenKen() {
 		fillPuzzle();
 		setWalls();
@@ -12,7 +15,7 @@ public class KenKen {
 	private void fillPuzzle() {
 		Scanner sc = new Scanner(System.in);
 
-		int dim = sc.nextInt();
+		dim = sc.nextInt();
 
 		// create dim x dim puzzle of squares
 		puzzle = new KKSquare[dim][dim];
@@ -79,72 +82,49 @@ public class KenKen {
 	}
 
 	private void setWalls() {
-		for (int r = 0; r < groups.length; r++) {
-			// stores UP DOWN LEFT RIGHT for walls
-			String[] walls = new String[4];
 
-			for (int c = 0; c < groups[r].length; c++) {
-				KKSquare currSquare = groups[r][c];
+		for (int r = 0; r < puzzle.length; r++) {
+			for (int c = 0; c < puzzle.length; c++) {
 				int counter = 0;
-				if (c != groups[r].length - 1) { // first squares depend on next, last depends on previous
-					KKSquare nextSquare = groups[r][c + 1];
-
-					if (currSquare.getRow() == nextSquare.getRow()) {
-						if (currSquare.getRow() != 0) {
-							walls[counter++] = "UP";
-						}
-						if (currSquare.getRow() != puzzle.length -1) {
-							walls[counter++] = "DOWN";
-						}
-					}
-
-					if (currSquare.getCol() == nextSquare.getCol()) {
-						if (currSquare.getCol() != 0) {
-							walls[counter++] = "LEFT";
-						}
-						if (currSquare.getCol() != puzzle[0].length - 1) {
-							walls[counter++] = "RIGHT";
-						}
-					}
-				}
-				else { // last square depends on previous
-					KKSquare prevSquare = groups[r][c - 1];
-
-					if (currSquare.getRow() == prevSquare.getRow()) {
-						if (currSquare.getRow() != 0) {
-							walls[counter++] = "UP";
-						}
-						if (currSquare.getRow() != puzzle.length -1) {
-							walls[counter++] = "DOWN";
-						}
-					}
-					if (currSquare.getCol() == prevSquare.getCol()) {
-						if (currSquare.getCol() != 0) {
-							walls[counter++] = "LEFT";
-						}
-						if (currSquare.getCol() != puzzle[0].length - 1) {
-							walls[counter++] = "RIGHT";
-						}
-					}
+				String[] walls = new String[4];
 					
-				}
-
-				// first element : has expression
-				if (c == 0) {
-					groups[r][c].setOutputString(walls, true);
-				}
-				else {
-					groups[r][c].setOutputString(walls, false);
-				}
+				if (r != 0 && puzzle[r][c].getGroup() != puzzle[r-1][c].getGroup()) walls[counter++] = "UP";
+				if (r != puzzle.length - 1 && puzzle[r][c].getGroup() != puzzle[r+1][c].getGroup()) walls[counter++] = "DOWN";
+				if (c != 0 && puzzle[r][c].getGroup() != puzzle[r][c-1].getGroup()) walls[counter++] = "LEFT";
+				if (c != puzzle[0].length - 1 && puzzle[r][c].getGroup() != puzzle[r][c+1].getGroup()) walls[counter++] = "RIGHT";
+				
+				puzzle[r][c].setOutputString(walls);
 			}
 		}
+
 	}
 
 
 	private void printGroups() {
 
-		for (int i = 0; i < puzzle[0].length; i++) {
-			System.out.print(puzzle[0][i]);
+		// set up a scaled grid
+		String[][] temp = new String[pixelSize * dim][pixelSize * dim];
+
+		for (int i = 0; i < puzzle.length; i++) {
+			for (int j = 0; j < puzzle[0].length; j++) {
+				KKSquare currentSquare = puzzle[i][j];
+				String[][] currentSquareText = currentSquare.getPrintableVal();
+
+				for (int row = 0; row < currentSquareText.length; row++) {
+					for (int col = 0; col < currentSquareText[0].length; col++) {
+						temp[i*pixelSize + row][j*pixelSize + col] = currentSquareText[row][col];
+					}
+				}
+			}
+		}
+
+		// actually print the temp array
+		for (String[] subarr : temp) {
+			String line = "";
+			for (String c :  subarr) {
+				line += c;
+			}
+			System.out.println(line);
 		}
 
 	}

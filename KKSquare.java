@@ -41,7 +41,9 @@ public class KKSquare {
 	public int getRow() { return cell.row; }
 	public int getCol() { return cell.col; }
 
-	public void setOutputString(String[] arr, boolean hasExpression) {
+	public String[][] getPrintableVal() { return printableVal; }
+
+	public void setOutputString(String[] arr) {
 		// 4 x 4 output with walls on "UP" "LEFT" "RIGHT" "DOWN"
 		// depending on arr values
 
@@ -51,7 +53,8 @@ public class KKSquare {
 			}
 		}
 
-		if (hasExpression) {
+		// if the cell has an expression
+		if (expression != null) {
 			for (int i = 0; i < expression.length(); i++) {
 				printableVal[1][i+1] = expression.substring(i, i + 1);
 			}
@@ -117,7 +120,7 @@ public class KKSquare {
 		test.setExpression("11/");
 
 		String[] walls = {"UP", "LEFT"};
-		test.setOutputString(walls, true);
+		test.setOutputString(walls);
 
 		System.out.print(test);
 	}
