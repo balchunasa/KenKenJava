@@ -1,8 +1,10 @@
 public class KKSquare {
 	private int value;
 	private int group;
-	private int groupTotal;
+	
 	private String expression;
+
+
 	private Cell cell;
 	private String[][]	printableVal = {{"==","==","==","==","==","=="},
 										{"||","  ","  ","  ","  ","||"},
@@ -27,16 +29,14 @@ public class KKSquare {
 	}
 
 	public int getValue() { return value; }
-	public void setValue(int value) { this.value = value; }
+	public void setValue(int value) { this.value = value; printableVal[3][2] = value + " ";}
 	public void removeValue() { this.value = 0; }
 
 	public int getGroup() { return group; }
 	public void setGroup(int group) { this.group = group; }
 
 	public void setExpression(String expression) { this.expression = expression; }
-
-	public int getGroupTotal() { return groupTotal; }
-	public void setGroupTotal(int groupTotal) { this.groupTotal = groupTotal; }
+	public String getExpression() { return expression; }
 
 	public int getRow() { return cell.row; }
 	public int getCol() { return cell.col; }

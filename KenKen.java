@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class KenKen {
 	private KKSquare[][] puzzle;
@@ -12,8 +14,13 @@ public class KenKen {
 		setWalls();
 	}
 
+	public KKSquare[][] getPuzzle() { return puzzle; }
+
 	private void fillPuzzle() {
-		Scanner sc = new Scanner(System.in);
+
+		try {
+		File f = new File("input");
+		Scanner sc = new Scanner(f);
 
 		dim = sc.nextInt();
 
@@ -54,13 +61,18 @@ public class KenKen {
 			// set the expression for the first element
 			String op = sc.next();
 			int groupTotal = sc.nextInt();
-
-			puzzle[expressionRow][expressionCol].setGroupTotal(groupTotal);
 			puzzle[expressionRow][expressionCol].setExpression(groupTotal + op);
 		}
 
 		setGroups();
+		sc.close();
+		}
+		catch (FileNotFoundException e) {
+			System.out.println("Something went wrong.");
+		}
 	}
+
+	private int getDim() { return dim; }
 
 	private void setGroups() {
 		for (int i = 0; i < puzzle.length; i++) {
@@ -100,7 +112,7 @@ public class KenKen {
 	}
 
 
-	private void printGroups() {
+	public String toString() {
 
 		// set up a scaled grid
 		String[][] temp = new String[pixelSize * dim][pixelSize * dim];
@@ -118,21 +130,82 @@ public class KenKen {
 			}
 		}
 
+		String line = "";
 		// actually print the temp array
 		for (String[] subarr : temp) {
-			String line = "";
 			for (String c :  subarr) {
 				line += c;
 			}
-			System.out.println(line);
+			line += "\n";
 		}
 
+		return line;
+	}
+
+	public boolean isSolved() {
+
+		for (KKSquare[] group : groups) {
+			int[] groupNums = new int[group.length];
+			for (int i = 0; i < group.length; i++) {
+				groupNums[i] = group[i].getValue();
+			}
+
+			if (!expressionSatisfied(group[0].getExpression(), groupNums)) return false;
+		}
+
+		return true;
+	}
+
+	private boolean expressionSatisfied(String expression, int[] groupNums) {
+		String operator = expression.substring(expression.length() - 1);
+
+		int expressionValue = (new Integer(expression.substring(0, expression.length() - 1))).intValue();
+		int groupValue = 0;
+
+		if (operator.equals("+")) {
+			System.out.println("Here");
+			for (int i : groupNums) { groupValue += i; }
+			return groupValue == expressionValue;
+		}
+		if (operator.equals("-")) {
+			// only two values for subtraction:
+			return expressionValue == groupNums[0] - groupNums[1] || expressionValue == groupNums[1] - groupNums[2];
+		}
+		if (operator.equals("*")) {
+			for (int i : groupNums) { groupValue *= i; }
+			return groupValue == expressionValue;
+		}
+		if (operator.equals("/")) {
+			// only two values for division:
+			return expressionValue == groupNums[0] / groupNums[1] || expressionValue == groupNums[1] / groupNums[2];
+		}
+
+		return false;
+	}
+
+	private void setValue(int row, int col, int val) {
+		puzzle[row - 1][col - 1].setValue(val);
 	}
 
 	public static void main(String[] args) {
-		System.out.println("This is a test!");
+		Scanner sc = new Scanner(System.in);
 
 		KenKen kkGame = new KenKen();
-		kkGame.printGroups();
+
+		int row = 1, col = 1, val = 0;
+		int dim = kkGame.getDim();
+
+		while (!kkGame.isSolved()) {
+			System.out.print(kkGame);
+			do {
+				System.out.print("Give row col num: ");
+				row = sc.nextInt();
+				col = sc.nextInt();
+				val = sc.nextInt();
+			} while (row > dim || col > dim || row <= 0 || col <= 0);
+
+			kkGame.setValue(row, col, val);
+		}
+
 	}
 }
