@@ -178,6 +178,7 @@ public class KenKen {
 		}
 		if (operator.equals("/")) {
 			// only two values for division:
+			if (groupNums[0] == 0 || groupNums[1] == 0) return false;
 			return expressionValue == groupNums[0] / groupNums[1] || expressionValue == groupNums[1] / groupNums[0];
 		}
 
