@@ -68,7 +68,7 @@ public class KenKen {
 		sc.close();
 		}
 		catch (FileNotFoundException e) {
-			System.out.println("Something went wrong.");
+			System.out.println("Something went wrong. File not found.");
 		}
 	}
 
@@ -192,6 +192,10 @@ public class KenKen {
 	public void play() {
 		Scanner sc = new Scanner(System.in);
 
+		System.out.println("Welcome to the interactive KenKen Puzzle!");
+		System.out.println("The grid is indexed at 1, so 1 1 is the top left square.");
+		System.out.print("Have fun and press enter to continue...");
+		sc.nextLine();
 		int row = 1, col = 1, val = 0;
 		int dim = this.getDim();
 
@@ -199,9 +203,9 @@ public class KenKen {
 			System.out.print("\033[H\033[J");
 			System.out.print(this);
 			do {
-				System.out.print("Give row col num: ");
-				row = sc.nextInt();
+				System.out.print("Provide x y num: ");
 				col = sc.nextInt();
+				row = sc.nextInt();
 				val = sc.nextInt();
 			} while (row > dim || col > dim || row <= 0 || col <= 0);
 
@@ -224,9 +228,9 @@ public class KenKen {
 		while (!kkGame.isSolved()) {
 			System.out.print(kkGame);
 			do {
-				System.out.print("Give row col num: ");
-				row = sc.nextInt();
+				System.out.print("Give x y num: ");
 				col = sc.nextInt();
+				row = sc.nextInt();
 				val = sc.nextInt();
 			} while (row > dim || col > dim || row <= 0 || col <= 0);
 

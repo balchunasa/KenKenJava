@@ -1,0 +1,4 @@
+See testinputs for how to format your KenKen puzzle
+
+Run KenKenDriver with an argument of the name of the puzzle to play!
+e.g. java KenKenDriver ./puzzles/puzzle1
