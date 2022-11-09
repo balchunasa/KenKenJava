@@ -162,6 +162,10 @@ public class KenKen {
 		int expressionValue = (new Integer(expression.substring(0, expression.length() - 1))).intValue();
 		int groupValue;
 
+		for (int num : groupNums) {
+			if (num == 0) return false;
+		}
+
 		if (operator.equals("+")) {
 			groupValue = 0;
 			for (int i : groupNums) { groupValue += i; }

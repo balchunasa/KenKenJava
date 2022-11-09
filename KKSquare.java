@@ -29,7 +29,15 @@ public class KKSquare {
 	}
 
 	public int getValue() { return value; }
-	public void setValue(int value) { this.value = value; printableVal[3][2] = value + " ";}
+	public void setValue(int value) { this.value = value; 
+		if (value != 0) {
+		printableVal[3][2] = value + " ";
+		}
+		else {
+			printableVal[3][2] =  "  ";
+		}
+	}
+	
 	public void removeValue() { this.value = 0; }
 
 	public int getGroup() { return group; }
