@@ -207,9 +207,9 @@ public class KenKen {
 			System.out.print("\033[H\033[J");
 			System.out.print(this);
 			do {
-				System.out.print("Provide x y num: ");
-				col = sc.nextInt();
+				System.out.print("Provide row col num: ");
 				row = sc.nextInt();
+				col = sc.nextInt();
 				val = sc.nextInt();
 			} while (row > dim || col > dim || row <= 0 || col <= 0);
 

@@ -4,7 +4,6 @@ public class KKSquare {
 	
 	private String expression;
 
-
 	private Cell cell;
 	private String[][]	printableVal = {{"==","==","==","==","==","=="},
 										{"||","  ","  ","  ","  ","||"},
