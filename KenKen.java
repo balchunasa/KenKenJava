@@ -9,17 +9,17 @@ public class KenKen {
 	private int dim;
 	private final int pixelSize = 6;
 
-	public KenKen() {
-		fillPuzzle();
+	public KenKen(String filename) {
+		fillPuzzle(filename);
 		setWalls();
 	}
 
 	public KKSquare[][] getPuzzle() { return puzzle; }
 
-	private void fillPuzzle() {
+	private void fillPuzzle(String filename) {
 
 		try {
-		File f = new File("input");
+		File f = new File(filename);
 		Scanner sc = new Scanner(f);
 
 		dim = sc.nextInt();
@@ -72,7 +72,7 @@ public class KenKen {
 		}
 	}
 
-	private int getDim() { return dim; }
+	public int getDim() { return dim; }
 
 	private void setGroups() {
 		for (int i = 0; i < puzzle.length; i++) {
@@ -160,37 +160,62 @@ public class KenKen {
 		String operator = expression.substring(expression.length() - 1);
 
 		int expressionValue = (new Integer(expression.substring(0, expression.length() - 1))).intValue();
-		int groupValue = 0;
+		int groupValue;
 
 		if (operator.equals("+")) {
-			System.out.println("Here");
+			groupValue = 0;
 			for (int i : groupNums) { groupValue += i; }
 			return groupValue == expressionValue;
 		}
 		if (operator.equals("-")) {
 			// only two values for subtraction:
-			return expressionValue == groupNums[0] - groupNums[1] || expressionValue == groupNums[1] - groupNums[2];
+			return expressionValue == groupNums[0] - groupNums[1] || expressionValue == groupNums[1] - groupNums[0];
 		}
 		if (operator.equals("*")) {
+			groupValue = 1;
 			for (int i : groupNums) { groupValue *= i; }
 			return groupValue == expressionValue;
 		}
 		if (operator.equals("/")) {
 			// only two values for division:
-			return expressionValue == groupNums[0] / groupNums[1] || expressionValue == groupNums[1] / groupNums[2];
+			return expressionValue == groupNums[0] / groupNums[1] || expressionValue == groupNums[1] / groupNums[0];
 		}
 
 		return false;
 	}
 
-	private void setValue(int row, int col, int val) {
+	public void setValue(int row, int col, int val) {
 		puzzle[row - 1][col - 1].setValue(val);
+	}
+
+	public void play() {
+		Scanner sc = new Scanner(System.in);
+
+		int row = 1, col = 1, val = 0;
+		int dim = this.getDim();
+
+		while (!this.isSolved()) {
+			System.out.print("\033[H\033[J");
+			System.out.print(this);
+			do {
+				System.out.print("Give row col num: ");
+				row = sc.nextInt();
+				col = sc.nextInt();
+				val = sc.nextInt();
+			} while (row > dim || col > dim || row <= 0 || col <= 0);
+
+			this.setValue(row, col, val);
+		}
+
+		System.out.print("\033[H\033[J");
+		System.out.print(this);
+		System.out.print("CONGRATS! YOU WIN!");
 	}
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 
-		KenKen kkGame = new KenKen();
+		KenKen kkGame = new KenKen(args[0]);
 
 		int row = 1, col = 1, val = 0;
 		int dim = kkGame.getDim();
